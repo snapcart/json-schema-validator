@@ -1,0 +1,23 @@
+name: JSON Schema Validator
+description: Validate JSON files against specified JSON schema
+runs:
+  using: docker
+  image: Dockerfile
+inputs:
+  token:
+    description: GitHub token to access pull request details
+    required: true
+  json_schema:
+    description: Path to the JSON Schema to validate with
+    required: true
+  json_path_pattern:
+    description: Path to JSON files in RegEx
+    required: true
+  send_comment:
+    description: Create a comment containing validation errors
+    required: false
+    default: "false"
+  clear_comments:
+    description: Clear previous error comment(s)
+    required: false
+    default: "false"
