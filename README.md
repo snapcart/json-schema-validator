@@ -19,7 +19,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Validate BigQuery schema
-        uses: snapcart/json-validator@v1.0.0
+        uses: snapcart/json-schema-validator@v1.0.0
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           json_schema: ./schemas/bigquery_schema.schema
@@ -27,7 +27,7 @@ jobs:
           send_comment: true
           clear_comments: true
       - name: Validate other schema
-        uses: snapcart/json-validator@v1.0.0
+        uses: snapcart/json-schema-validator@v1.0.0
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           json_schema: ./schemas/other_schema.schema
