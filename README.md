@@ -1,8 +1,6 @@
 # JSON Schema Validator
 
-## Overview
-
-It's a Github Action for validating JSON using specified JSON schema.
+A Github Action for validating JSON using specified JSON schema.
 
 ## How to use it?
 
