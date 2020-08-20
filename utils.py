@@ -10,6 +10,7 @@ from jsonschema import Draft7Validator
 BASE = 'https://api.github.com'
 ISSUE_COMMENTS = BASE + '/repos/{repo}/issues/{issue_number}/comments'
 DELETE_ISSUE_COMMENTS = BASE + '/repos/{repo}/issues/comments/{comment_id}'
+AUTHENTICATED_USER = BASE + '/user'
 
 COMMENT_HEADER = '**JSON Schema validation failed for `{path}`**'
 COMMENT = '''
@@ -68,24 +69,29 @@ def validate_file(json_schema, path_pattern, file_path):
 
 
 def delete_comment(repo, id):
+    print('deleting comment {}'.format(id))
     delete_comment_url = DELETE_ISSUE_COMMENTS.format(repo=repo, comment_id=id)
     request('delete', delete_comment_url)
 
 
 def delete_comments(repo, pull_number):
     print('clearing comments')
-    bot = 'github-actions[bot]'
-    comment_url = ISSUE_COMMENTS.format(repo=repo, issue_number=pull_number)
+    user = request('get', AUTHENTICATED_USER)
+    username = jq.compile('.login').input(user).first()
 
-    comments = request('get', comment_url)
-    jq_user = jq.compile('.user.login')
-    jq_comment = jq.compile('.id')
+    comment_url = ISSUE_COMMENTS.format(repo=repo, issue_number=pull_number)
+    comment_response = request('get', comment_url)
+    comments = jq \
+        .compile('.[] | {user: .user.login, id, body}') \
+        .input(comment_response) \
+        .all()
+
+    header_sub = COMMENT_HEADER[:10]
+    pattern = re.compile('^{}'.format(re.escape(header_sub)))
 
     for comment in comments:
-        user = jq_user.input(comment).first()
-        if user == bot:
-            comment_id = jq_comment.input(comment).first()
-            delete_comment(repo, comment_id)
+        if comment['user'] == username and pattern.match(comment['body']):
+            delete_comment(repo, comment['id'])
 
 
 def create_comment(repo, pull_number, validation_errors):
