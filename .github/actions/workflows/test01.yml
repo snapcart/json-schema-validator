@@ -1,0 +1,24 @@
+on:
+  pull_request:
+    branches:
+      - master
+name: Pull request workflow
+jobs:
+  validate_configurations:
+    name: Validate configurations
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Validate Json schema
+        uses: ./github/actions/jsonValidator
+        with:
+          json_schema: ./schemas/user-schema.json
+          json_path_pattern: .*bigquery_schema.json$
+          send_comment: true
+          clear_comments: true
+      # - name: Validate other schema
+      #   uses: snapcart/json-schema-validator@v1.0.0
+      #   with:
+      #     token: ${{ secrets.GITHUB_TOKEN }}
+      #     json_schema: ./schemas/other_schema.schema
+      #     json_path_pattern: .*other_schema.json$
