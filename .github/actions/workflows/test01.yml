@@ -1,5 +1,7 @@
 on:
-
+  push:
+    branches:
+    - test/jsonvalidator
   workflow_dispatch:
 name: Pull request workflow
 jobs:
