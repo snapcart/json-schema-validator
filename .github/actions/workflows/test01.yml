@@ -1,7 +1,5 @@
 on:
-  pull_request:
-    branches:
-      - master
+
   workflow_dispatch:
 name: Pull request workflow
 jobs:
@@ -14,7 +12,7 @@ jobs:
         uses: ./github/actions/jsonValidator
         with:
           json_schema: ./schemas/user-schema.json
-          json_path_pattern: .*bigquery_schema.json$
+          json_path_pattern: ./users/*.json
           send_comment: true
           clear_comments: true
       # - name: Validate other schema
