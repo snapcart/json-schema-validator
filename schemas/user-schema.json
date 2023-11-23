@@ -1,0 +1,24 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "properties": {
+      "name": {
+        "type": "string",
+        "minLength": 1,
+        "description": "This should be the first name of the person"
+      },
+      "age": {
+        "type": "integer"
+      },
+      "isMarried": {
+        "type": "boolean",
+        "enum": [true, false]
+      },
+      "website": {
+        "type": "string",
+        "format": "uri"
+      }
+    },
+    "required": ["name", "age", "isMarried"],
+    "additionalProperties": false
+  }
